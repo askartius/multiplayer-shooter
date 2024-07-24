@@ -1,0 +1,164 @@
+extends CharacterBody3D
+
+
+signal health_changed(health)
+signal ammo_changed(ammo, ammo_size)
+
+const SPEED = 10.0
+const JUMP_VELOCITY = 10.0
+const GRAVITY = 20.0
+
+var health = 100
+var weapon = 0
+var damage = 50
+var ammo = INF
+var ammo_size = INF
+
+@onready var camera = $Camera3D
+@onready var ray_cast = $Camera3D/RayCast3D
+@onready var nickname_label = $NicknameLabel
+@onready var animation_player = $AnimationPlayer
+@onready var knife = $Camera3D/Knife
+@onready var pistol = $Camera3D/Pistol
+@onready var uzi = $Camera3D/Uzi
+@onready var mesh_instance = $MeshInstance3D
+
+
+func _enter_tree():
+	set_multiplayer_authority(int(str(name)))
+
+func _ready():
+	# Enable the controls for the local player
+	if is_multiplayer_authority():
+		camera.make_current()
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	else:
+		set_process_unhandled_input(false)
+		set_physics_process(false)
+
+func _unhandled_input(event):
+	if event is InputEventMouseMotion:
+		rotate_y(-event.relative.x * 0.005)
+		camera.rotate_x(-event.relative.y * 0.005)
+		camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
+
+func _physics_process(delta):
+	# Add the gravity
+	if not is_on_floor():
+		velocity.y -= GRAVITY * delta
+
+	# Handle jump
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+	
+	# Handle shooting
+	if Input.is_action_pressed("shoot") and weapon == 2 and \
+		not animation_player.current_animation == "uzi_shoot" and \
+		not animation_player.current_animation == "reload":
+		if not ammo == 0:
+			shoot.rpc()
+			if ray_cast.is_colliding():
+				var hit_player = ray_cast.get_collider()
+				hit_player.take_damage.rpc_id(hit_player.get_multiplayer_authority(), damage)
+	elif Input.is_action_just_pressed("shoot") and \
+		not animation_player.current_animation == "shoot" and \
+		not animation_player.current_animation == "reload":
+		if not ammo == 0:
+			shoot.rpc()
+			if ray_cast.is_colliding():
+				var hit_player = ray_cast.get_collider()
+				hit_player.take_damage.rpc_id(hit_player.get_multiplayer_authority(), damage)
+	
+	# Handle reload
+	if Input.is_action_just_pressed("reload") and weapon > 0 and not animation_player.current_animation == "reload":
+		reload.rpc()
+	
+	# Handle switching weapons
+	if Input.is_action_just_pressed("switch_weapons") and not animation_player.current_animation == "shoot":
+		switch_weapons.rpc()
+
+	# Get the input direction and handle the movement/deceleration
+	var input_dir = Input.get_vector("left", "right", "up", "down")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if direction:
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+
+	move_and_slide()
+
+@rpc("call_local")
+func shoot():
+	animation_player.stop()
+	if weapon < 2:
+		animation_player.play("shoot")
+	else:
+		animation_player.play("uzi_shoot")
+	
+	if weapon > 0:
+		var muzzle_flash
+		if weapon == 1:
+			muzzle_flash = pistol.find_child("MuzzleFlash")
+		elif weapon == 2:
+			muzzle_flash = uzi.find_child("MuzzleFlash")
+		muzzle_flash.restart()
+		muzzle_flash.emitting = true
+	
+	ammo -= 1
+	ammo_changed.emit(ammo, ammo_size)
+
+@rpc("any_peer")
+func take_damage(damage):
+	health -= damage
+	if health <= 0:
+		health = 100
+		position = Vector3(randi_range(-15, 15), 5, randi_range(-15, 15))
+		rotation = Vector3.ZERO
+	health_changed.emit(health)
+
+func set_nickname(nickname):
+	nickname_label.text = nickname
+
+func set_color(color):
+	mesh_instance.mesh.material.albedo_color = Color(color)
+
+@rpc("call_local")
+func switch_weapons():
+	match weapon:
+		0:
+			weapon = 1
+			knife.hide()
+			pistol.show()
+			ray_cast.target_position = Vector3(0, 0, -50)
+			damage = 20
+			ammo = 10
+			ammo_size = 10
+		1:
+			weapon = 2
+			pistol.hide()
+			uzi.show()
+			ray_cast.target_position = Vector3(0, 0, -75)
+			damage = 4
+			ammo = 50
+			ammo_size = 50
+		2:
+			weapon = 0
+			uzi.hide()
+			knife.show()
+			ray_cast.target_position = Vector3(0, 0, -2)
+			damage = 50
+			ammo = INF
+			ammo_size = INF
+	
+	ammo_changed.emit(ammo, ammo_size)
+
+@rpc("call_local")
+func reload():
+	animation_player.stop()
+	animation_player.play("reload")
+
+func _on_animation_player_animation_finished(anim_name):
+	if anim_name == "reload":
+		ammo = ammo_size

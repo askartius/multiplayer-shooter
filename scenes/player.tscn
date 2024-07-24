@@ -1,0 +1,290 @@
+[gd_scene load_steps=15 format=3 uid="uid://ccvy5kejebpq4"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_3vguo"]
+[ext_resource type="PackedScene" uid="uid://diw30mi0scahp" path="res://scenes/pistol.tscn" id="2_p8raw"]
+[ext_resource type="PackedScene" uid="uid://0dewra6m730b" path="res://scenes/knife.tscn" id="2_sr0si"]
+[ext_resource type="PackedScene" uid="uid://dfbcffmne7i8h" path="res://scenes/uzi.tscn" id="4_jr4ug"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_imy1d"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Camera3D:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("NicknameLabel:text")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d1m53"]
+metallic_specular = 0.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ucsyn"]
+material = SubResource("StandardMaterial3D_d1m53")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4owt7"]
+
+[sub_resource type="Animation" id="Animation_wo4oo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D/Pistol:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.5, -0.25, -0.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D/Pistol:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Camera3D/Knife:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.5, -0.25, -0.5)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Camera3D/Knife:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Camera3D/Uzi:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.5, -0.25, -0.5)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Camera3D/Uzi:rotation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_vubmt"]
+resource_name = "shoot"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D/Pistol:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector3(0.5, -0.2, -0.4), Vector3(0.5, -0.25, -0.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D/Pistol:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector3(0.261799, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Camera3D/Knife:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.5),
+"transitions": PackedFloat32Array(2, 0.5, 1),
+"update": 0,
+"values": [Vector3(0.5, -0.25, -0.5), Vector3(0.4, -0.3, -0.75), Vector3(0.5, -0.25, -0.5)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Camera3D/Knife:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.5),
+"transitions": PackedFloat32Array(2, 0.5, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.0436332, 0.523599, 1.0472), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_pci5n"]
+resource_name = "stab"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D/Knife:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.5),
+"transitions": PackedFloat32Array(2, 0.5, 2),
+"update": 0,
+"values": [Vector3(0.5, -0.25, -0.5), Vector3(0.4, -0.3, -0.75), Vector3(0.5, -0.25, -0.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D/Knife:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.5),
+"transitions": PackedFloat32Array(2, 0.5, 2),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.0436332, 0.523599, 1.0472), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_m03yh"]
+resource_name = "uzi_shoot"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D/Uzi:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector3(0.5, -0.225, -0.475), Vector3(0.5, -0.25, -0.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D/Uzi:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector3(0.0436332, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_lmxqu"]
+resource_name = "reload"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D/Pistol:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 2.3, 2.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1, -2, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.261799, -1.0472), Vector3(0, 0.261799, -1.0472), Vector3(0, 0, 0), Vector3(6.28319, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D/Uzi:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 2.8, 3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, -1.0472), Vector3(0, 0, -1.0472), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7rifx"]
+_data = {
+"RESET": SubResource("Animation_wo4oo"),
+"reload": SubResource("Animation_lmxqu"),
+"shoot": SubResource("Animation_vubmt"),
+"stab": SubResource("Animation_pci5n"),
+"uzi_shoot": SubResource("Animation_m03yh")
+}
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 3
+script = ExtResource("1_3vguo")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_imy1d")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_ucsyn")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_4owt7")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
+target_position = Vector3(0, 0, -2)
+collision_mask = 2
+
+[node name="Knife" parent="Camera3D" instance=ExtResource("2_sr0si")]
+
+[node name="Pistol" parent="Camera3D" instance=ExtResource("2_p8raw")]
+visible = false
+
+[node name="Uzi" parent="Camera3D" instance=ExtResource("4_jr4ug")]
+visible = false
+
+[node name="NicknameLabel" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.4, 0)
+autowrap_mode = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_7rifx")
+}
+playback_default_blend_time = 0.05
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

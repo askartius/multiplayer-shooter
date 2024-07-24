@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3 uid="uid://diw30mi0scahp"]
+
+[ext_resource type="PackedScene" uid="uid://cje2tftmyetns" path="res://assets/pistol.blend" id="1_fnxkq"]
+[ext_resource type="Texture2D" uid="uid://o86bmfxm1wac" path="res://assets/flash.png" id="2_rsfjp"]
+
+[sub_resource type="Gradient" id="Gradient_kapuw"]
+offsets = PackedFloat32Array(0, 0.218182, 1)
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_yrt7n"]
+gradient = SubResource("Gradient_kapuw")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qhc0h"]
+gravity = Vector3(0, 0, 0)
+color_ramp = SubResource("GradientTexture1D_yrt7n")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_visfy"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 0.627451, 1)
+albedo_texture = ExtResource("2_rsfjp")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+grow_amount = 1.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sy58h"]
+material = SubResource("StandardMaterial3D_visfy")
+size = Vector2(0.25, 0.25)
+orientation = 2
+
+[node name="Pistol" instance=ExtResource("1_fnxkq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.25, -0.5)
+
+[node name="MuzzleFlash" type="GPUParticles3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, -0.275)
+emitting = false
+amount = 1
+lifetime = 0.25
+one_shot = true
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_qhc0h")
+draw_pass_1 = SubResource("PlaneMesh_sy58h")
