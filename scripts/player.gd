@@ -36,6 +36,7 @@ func _ready():
 		set_process_unhandled_input(false)
 		set_physics_process(false)
 	
+	randomize()
 	set_color(Color(randf_range(0, 1), randf_range(0, 1), randf_range(0, 1)).to_html())
 
 func _unhandled_input(event):
@@ -116,7 +117,8 @@ func take_damage(damage_taken):
 	health -= damage_taken
 	if health <= 0:
 		health = 100
-		position = Vector3(randi_range(-15, 15), 5, randi_range(-15, 15))
+		randomize()
+		position = Vector3(randi_range(-12, 12), 5, randi_range(-12, 12))
 		rotation = Vector3.ZERO
 	health_changed.emit(health)
 

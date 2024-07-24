@@ -43,11 +43,10 @@ func _on_join_button_pressed():
 	multiplayer.server_disconnected.connect(get_tree().quit)
 
 func add_player(peer_id):
-	randomize()
-	
 	var player = player_src.instantiate()
 	player.name = str(peer_id)
-	player.position = Vector3(randi_range(-15, 15), 5, randi_range(-15, 15))
+	randomize()
+	player.position = Vector3(randi_range(-12, 12), 5, randi_range(-12, 12))
 	add_child(player)
 	
 	if player.is_multiplayer_authority():
