@@ -18,7 +18,7 @@ var ammo_sizes = [INF, 10, 50]
 @onready var ray_cast = $Camera3D/RayCast3D
 @onready var nickname_label = $NicknameLabel
 @onready var animation_player = $AnimationPlayer
-@onready var knife = $Camera3D/Knife
+@onready var baton = $Camera3D/Baton
 @onready var pistol = $Camera3D/Pistol
 @onready var uzi = $Camera3D/Uzi
 @onready var mesh_instance = $MeshInstance3D
@@ -129,7 +129,7 @@ func switch_weapons():
 	match weapon:
 		0:
 			weapon = 1
-			knife.hide()
+			baton.hide()
 			pistol.show()
 			ray_cast.target_position = Vector3(0, 0, -50)
 			damage = 20
@@ -142,7 +142,7 @@ func switch_weapons():
 		2:
 			weapon = 0
 			uzi.hide()
-			knife.show()
+			baton.show()
 			ray_cast.target_position = Vector3(0, 0, -2)
 			damage = 50
 	

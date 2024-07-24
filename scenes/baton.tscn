@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dn5fwhwia76sv"]
+
+[ext_resource type="PackedScene" uid="uid://b5308v5f3sqgd" path="res://assets/baton.blend" id="1_gkryg"]
+
+[node name="Baton" instance=ExtResource("1_gkryg")]
+transform = Transform3D(0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, 0.5, -0.25, -0.5)
