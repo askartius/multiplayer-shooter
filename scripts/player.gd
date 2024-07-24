@@ -11,8 +11,8 @@ const GRAVITY = 20.0
 var health = 100
 var weapon = 0
 var damage = 50
-var ammo = INF
-var ammo_size = INF
+var ammos = [INF, 10, 50]
+var ammo_sizes = [INF, 10, 50]
 
 @onready var camera = $Camera3D
 @onready var ray_cast = $Camera3D/RayCast3D
@@ -55,7 +55,7 @@ func _physics_process(delta):
 	if Input.is_action_pressed("shoot") and weapon == 2 and \
 		not animation_player.current_animation == "uzi_shoot" and \
 		not animation_player.current_animation == "reload":
-		if not ammo == 0:
+		if not ammos[weapon] == 0:
 			shoot.rpc()
 			if ray_cast.is_colliding():
 				var hit_player = ray_cast.get_collider()
@@ -63,7 +63,7 @@ func _physics_process(delta):
 	elif Input.is_action_just_pressed("shoot") and \
 		not animation_player.current_animation == "shoot" and \
 		not animation_player.current_animation == "reload":
-		if not ammo == 0:
+		if not ammos[weapon] == 0:
 			shoot.rpc()
 			if ray_cast.is_colliding():
 				var hit_player = ray_cast.get_collider()
@@ -106,8 +106,8 @@ func shoot():
 		muzzle_flash.restart()
 		muzzle_flash.emitting = true
 	
-	ammo -= 1
-	ammo_changed.emit(ammo, ammo_size)
+	ammos[weapon] -= 1
+	ammo_changed.emit(ammos[weapon], ammo_sizes[weapon])
 
 @rpc("any_peer")
 func take_damage(damage):
@@ -133,26 +133,20 @@ func switch_weapons():
 			pistol.show()
 			ray_cast.target_position = Vector3(0, 0, -50)
 			damage = 20
-			ammo = 10
-			ammo_size = 10
 		1:
 			weapon = 2
 			pistol.hide()
 			uzi.show()
 			ray_cast.target_position = Vector3(0, 0, -75)
 			damage = 4
-			ammo = 50
-			ammo_size = 50
 		2:
 			weapon = 0
 			uzi.hide()
 			knife.show()
 			ray_cast.target_position = Vector3(0, 0, -2)
 			damage = 50
-			ammo = INF
-			ammo_size = INF
 	
-	ammo_changed.emit(ammo, ammo_size)
+	ammo_changed.emit(ammos[weapon], ammo_sizes[weapon])
 
 @rpc("call_local")
 func reload():
@@ -161,4 +155,4 @@ func reload():
 
 func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "reload":
-		ammo = ammo_size
+		ammos[weapon] = ammo_size[weapon]

@@ -141,6 +141,7 @@ layout_mode = 2
 text = "Close"
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -200,11 +201,13 @@ value = 100.0
 show_percentage = false
 
 [node name="AmmoLabel" type="Label" parent="CanvasLayer/HUD"]
+visible = false
 layout_mode = 0
 offset_left = 584.0
 offset_top = 312.0
 offset_right = 608.0
 offset_bottom = 335.0
+text = "∞"
 
 [connection signal="spawned" from="MultiplayerSpawner" to="." method="_on_multiplayer_spawner_spawned"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
