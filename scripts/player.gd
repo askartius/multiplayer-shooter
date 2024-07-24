@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 
 signal health_changed(health)
-signal ammo_changed(ammo, ammo_size)
+signal ammo_changed(ammo)
 
 const SPEED = 10.0
 const JUMP_VELOCITY = 10.0
@@ -107,7 +107,7 @@ func shoot():
 		muzzle_flash.emitting = true
 	
 	ammos[weapon] -= 1
-	ammo_changed.emit(ammos[weapon], ammo_sizes[weapon])
+	ammo_changed.emit(ammos[weapon])
 
 @rpc("any_peer")
 func take_damage(damage):
@@ -146,7 +146,7 @@ func switch_weapons():
 			ray_cast.target_position = Vector3(0, 0, -2)
 			damage = 50
 	
-	ammo_changed.emit(ammos[weapon], ammo_sizes[weapon])
+	ammo_changed.emit(ammos[weapon])
 
 @rpc("call_local")
 func reload():
@@ -155,4 +155,5 @@ func reload():
 
 func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "reload":
-		ammos[weapon] = ammo_size[weapon]
+		ammos[weapon] = ammo_sizes[weapon]
+		ammo_changed.emit(ammos[weapon])

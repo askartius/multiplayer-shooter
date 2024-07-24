@@ -11,7 +11,6 @@ var player_src = preload("res://scenes/player.tscn")
 @onready var nickname_input = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/NicknameInput
 @onready var hud = $CanvasLayer/HUD
 @onready var health_bar = $CanvasLayer/HUD/HealthBar
-@onready var ammo_bar = $CanvasLayer/HUD/AmmoBar
 @onready var ammo_label = $CanvasLayer/HUD/AmmoLabel
 @onready var help_menu = $CanvasLayer/HelpMenu
 @onready var sun = $Sun
@@ -66,8 +65,7 @@ func remove_player(peer_id):
 func update_health_bar(health):
 	health_bar.value = health
 
-func update_ammo_bar(ammo, ammo_size):
-	ammo_bar.value = ammo * 100 / ammo_size
+func update_ammo_bar(ammo):
 	if ammo != INF:
 		ammo_label.text = str(ammo)
 	else:

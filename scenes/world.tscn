@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dj1viwn11feii"]
+[gd_scene load_steps=9 format=3 uid="uid://dj1viwn11feii"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_8xg4p"]
 [ext_resource type="PackedScene" uid="uid://bjwxdae1idwap" path="res://scenes/environment.tscn" id="1_gl10l"]
@@ -22,12 +22,6 @@ bg_color = Color(0.188235, 0.313726, 0.0627451, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_03a44"]
 bg_color = Color(0.376471, 0.815686, 0.188235, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ljp3u"]
-bg_color = Color(0.313726, 0.313726, 0.0627451, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dm8c5"]
-bg_color = Color(0.752941, 0.752941, 0.12549, 1)
 
 [node name="World" type="Node"]
 script = ExtResource("1_8xg4p")
@@ -184,24 +178,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_03a44")
 value = 100.0
 show_percentage = false
 
-[node name="AmmoBar" type="ProgressBar" parent="CanvasLayer/HUD"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 608.0
-offset_top = 64.0
-offset_right = -160.0
-offset_bottom = -560.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_ljp3u")
-theme_override_styles/fill = SubResource("StyleBoxFlat_dm8c5")
-value = 100.0
-show_percentage = false
-
 [node name="AmmoLabel" type="Label" parent="CanvasLayer/HUD"]
-visible = false
 layout_mode = 0
 offset_left = 584.0
 offset_top = 312.0
