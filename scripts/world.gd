@@ -14,9 +14,10 @@ var player_src = preload("res://scenes/player.tscn")
 @onready var ammo_label = $CanvasLayer/HUD/AmmoLabel
 @onready var help_menu = $CanvasLayer/HelpMenu
 @onready var sun = $Sun
+@onready var color_picker = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/ColorSelectionContainer/ColorPicker
 
 
-func _unhandled_input(event):
+func _unhandled_input(_event):
 	if Input.is_action_just_pressed("quit"):
 		get_tree().quit()
 
@@ -55,7 +56,7 @@ func add_player(peer_id):
 		player.ammo_changed.connect(update_ammo_bar)
 		
 		player.set_nickname(nickname_input.text)
-		player.set_color(Color(randf_range(0, 1), randf_range(0, 1), randf_range(0, 1)).to_html())
+		#player.set_color.rpc_id(peer_id, Color(color_picker.color).to_html())
 
 func remove_player(peer_id):
 	var player = get_node_or_null(str(peer_id))
@@ -78,7 +79,8 @@ func _on_multiplayer_spawner_spawned(node):
 		node.ammo_changed.connect(update_ammo_bar)
 		
 		node.set_nickname(nickname_input.text)
-		node.set_color(Color(randf_range(0, 1), randf_range(0, 1), randf_range(0, 1)).to_html())
+		#node.set_color.rpc_id(int(str(node.name)), Color(color_picker.color).to_html())
+
 
 func _on_help_button_pressed():
 	main_menu.hide()
@@ -88,8 +90,9 @@ func _on_close_button_pressed():
 	main_menu.show()
 	help_menu.hide()
 
-func _on_sun_button_toggled(toggled_on):
-	if toggled_on:
-		sun.visible = true
-	else:
-		sun.visible = false
+func _on_time_button_item_selected(index):
+	match index:
+		0:
+			sun.visible = true
+		1:
+			sun.visible = false
