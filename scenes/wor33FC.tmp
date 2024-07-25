@@ -10,10 +10,7 @@ properties/0/spawn = true
 properties/0/replication_mode = 1
 properties/1/path = NodePath("Sun:visible")
 properties/1/spawn = true
-properties/1/replication_mode = 2
-properties/2/path = NodePath(".:kill_count")
-properties/2/spawn = true
-properties/2/replication_mode = 2
+properties/1/replication_mode = 1
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cdqty"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -184,7 +181,7 @@ layout_mode = 2
 layout_mode = 2
 placeholder_text = "Enter your nickname"
 alignment = 1
-max_length = 16
+max_length = 24
 
 [node name="ColorSelectionContainer" type="HBoxContainer" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -333,30 +330,6 @@ offset_right = 608.0
 offset_bottom = 335.0
 text = "∞"
 
-[node name="KillCountContainerColor" type="ColorRect" parent="CanvasLayer/HUD"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 384.0
-offset_right = -384.0
-offset_bottom = -584.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.25098, 0.25098, 0.25098, 0.501961)
-
-[node name="KillCountContainer" type="HBoxContainer" parent="CanvasLayer/HUD"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 384.0
-offset_right = -384.0
-offset_bottom = -584.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
 [node name="DeathScreen" type="PanelContainer" parent="CanvasLayer"]
 visible = false
 anchors_preset = 15
@@ -425,6 +398,20 @@ horizontal_alignment = 1
 libraries = {
 "": SubResource("AnimationLibrary_dum1p")
 }
+
+[node name="ItemList" type="ItemList" parent="CanvasLayer"]
+offset_left = 448.0
+offset_top = 16.0
+offset_right = 705.0
+offset_bottom = 64.0
+theme_override_font_sizes/font_size = 24
+max_text_lines = 2
+text_overrun_behavior = 0
+item_count = 3
+max_columns = 3
+item_0/text = "f30"
+item_1/text = "g 37"
+item_2/text = "s"
 
 [connection signal="spawned" from="MultiplayerSpawner" to="." method="_on_multiplayer_spawner_spawned"]
 [connection signal="item_selected" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/TimeSelectionContainer/TimeButton" to="." method="_on_time_button_item_selected"]

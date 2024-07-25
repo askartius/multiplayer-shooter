@@ -3,8 +3,11 @@ extends Node
 
 const PORT = 2048
 
+@export var kill_count = {}
+
 var peer = ENetMultiplayerPeer.new()
 var player_src = preload("res://scenes/player.tscn")
+var player_stats_container_src = preload("res://scenes/player_stats_container.tscn")
 
 @onready var main_menu = $CanvasLayer/MainMenu
 @onready var address_input = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/AddressInput
@@ -20,6 +23,7 @@ var player_src = preload("res://scenes/player.tscn")
 @onready var damage_dealt_label = $CanvasLayer/DeathScreen/MarginContainer/VBoxContainer/DamageInfoContainer/DamageDealtLabel
 @onready var animation_player = $CanvasLayer/AnimationPlayer
 @onready var overview_camera = $OverviewCameraPivotPoint/OverviewCamera
+@onready var kill_count_container = $CanvasLayer/HUD/KillCountContainer
 
 
 func _unhandled_input(_event):
@@ -61,12 +65,22 @@ func add_player(peer_id):
 		player.death.connect(die)
 		player.respawned.connect(respawn)
 		
-		player.set_nickname(nickname_input.text)
+		randomize()
+		var nickname = nickname_input.text if "" else "Unknown" + str(randi_range(0, 1000)) # Set the nickname to UnknownN if empty
+		player.set_nickname(nickname)
 		player.set_color(Color(color_picker.color).to_html())
+		
+	# Add player to the kill count
+	kill_count[player.nickname] = 0
+	var player_stats_container = player_stats_container_src.instantiate()
+	player_stats_container.name = player.nickname
+	player_stats_container.find_child("NicknameLabel").text = player.nickname
+	kill_count_container.add_child(player_stats_container)
 
 func remove_player(peer_id):
 	var player = get_node_or_null(str(peer_id))
 	if player:
+		kill_count.erase(player.nickname)
 		player.queue_free()
 
 func update_health(health):
@@ -76,7 +90,6 @@ func update_health(health):
 	if health <= 0:
 		hud.hide()
 		death_screen.show()
-		
 
 func update_ammo(ammo):
 	if ammo != INF:
@@ -85,15 +98,19 @@ func update_ammo(ammo):
 		ammo_label.text = "∞"
 
 func die(killer, damage_dealt):
+	#kill_count[killer] += 1
+	
 	hud.hide()
 	death_screen.show()
 	overview_camera.make_current()
+	
 	killer_label.text = killer
 	damage_dealt_label.text = str(damage_dealt)
 
 func respawn():
 	hud.show()
 	death_screen.hide()
+	
 	health_bar.value = 100
 
 func _on_multiplayer_spawner_spawned(node):
@@ -104,8 +121,16 @@ func _on_multiplayer_spawner_spawned(node):
 		node.death.connect(die)
 		node.respawned.connect(respawn)
 		
-		node.set_nickname(nickname_input.text)
+		var nickname = nickname_input.text if "" else "Unknown" + str(randi_range(0, 1000)) # Set the nickname to UnknownN if empty
+		node.set_nickname(nickname)
 		node.set_color(Color(color_picker.color).to_html())
+		
+	# Add player to the kill count
+	kill_count[node.nickname] = 0
+	var player_stats_container = player_stats_container_src.instantiate()
+	player_stats_container.name = node.nickname
+	player_stats_container.find_child("NicknameLabel").text = node.nickname
+	kill_count_container.add_child(player_stats_container)
 
 func _on_help_button_pressed():
 	main_menu.hide()
@@ -121,3 +146,7 @@ func _on_time_button_item_selected(index):
 			sun.visible = true
 		1:
 			sun.visible = false
+
+func update_kill_count():
+	for player in kill_count:
+		kill_count_container.find_child(player).find_child("KillCountLabel").text = kill_count[player]
