@@ -3,6 +3,8 @@ extends CharacterBody3D
 
 signal health_changed(health)
 signal ammo_changed(ammo)
+signal death(killer, damage_dealt)
+signal respawned
 
 const SPEED = 10.0
 const JUMP_VELOCITY = 10.0
@@ -13,6 +15,8 @@ var weapon = 0
 var damage = 50
 var ammos = [INF, 10, 50]
 var ammo_sizes = [INF, 10, 50]
+var nickname = ""
+var damage_dealt = 0
 
 @onready var camera = $Camera3D
 @onready var ray_cast = $Camera3D/RayCast3D
@@ -62,7 +66,8 @@ func _physics_process(delta):
 			shoot.rpc()
 			if ray_cast.is_colliding():
 				var hit_player = ray_cast.get_collider()
-				hit_player.take_damage.rpc_id(hit_player.get_multiplayer_authority(), damage)
+				hit_player.take_damage.rpc_id(hit_player.get_multiplayer_authority(), damage, nickname)
+				damage_dealt += damage
 	elif Input.is_action_just_pressed("shoot") and \
 		not animation_player.current_animation == "shoot" and \
 		not animation_player.current_animation == "reload":
@@ -70,7 +75,8 @@ func _physics_process(delta):
 			shoot.rpc()
 			if ray_cast.is_colliding():
 				var hit_player = ray_cast.get_collider()
-				hit_player.take_damage.rpc_id(hit_player.get_multiplayer_authority(), damage)
+				hit_player.take_damage.rpc_id(hit_player.get_multiplayer_authority(), damage, nickname)
+				damage_dealt += damage
 	
 	# Handle reload
 	if Input.is_action_just_pressed("reload") and weapon > 0 and not animation_player.current_animation == "reload":
@@ -113,24 +119,25 @@ func shoot():
 	ammo_changed.emit(ammos[weapon])
 
 @rpc("any_peer")
-func take_damage(damage_taken):
+func take_damage(damage_taken, damage_from):
 	health -= damage_taken
 	if health <= 0:
-		health = 100
-		randomize()
-		position = Vector3(randi_range(-12, 12), 5, randi_range(-12, 12))
-		rotation = Vector3.ZERO
+		camera.clear_current(false)
+		death.emit(damage_from, damage_dealt)
+		die.rpc()
 	health_changed.emit(health)
 
-func set_nickname(nickname):
-	nickname_label.text = nickname
+func set_nickname(user_nickname):
+	nickname_label.text = user_nickname
+	nickname = user_nickname
 
-#@rpc("any_peer", "call_local")
+@rpc("any_peer", "call_local")
 func set_color(color):
 	mesh_instance.mesh.material.albedo_color = Color(color)
 
 @rpc("call_local")
 func switch_weapons():
+	animation_player.stop()
 	match weapon:
 		0:
 			weapon = 1
@@ -162,3 +169,16 @@ func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "reload":
 		ammos[weapon] = ammo_sizes[weapon]
 		ammo_changed.emit(ammos[weapon])
+	if anim_name == "death":
+		if is_multiplayer_authority():
+			camera.make_current()
+		health = 100
+		randomize()
+		position = Vector3(randi_range(-12, 12), 5, randi_range(-12, 12))
+		rotation = Vector3.ZERO
+		respawned.emit()
+
+@rpc("call_local")
+func die():
+	animation_player.stop()
+	animation_player.play("death")

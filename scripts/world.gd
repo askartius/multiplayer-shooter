@@ -15,6 +15,9 @@ var player_src = preload("res://scenes/player.tscn")
 @onready var help_menu = $CanvasLayer/HelpMenu
 @onready var sun = $Sun
 @onready var color_picker = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/ColorSelectionContainer/ColorPicker
+@onready var death_screen = $CanvasLayer/DeathScreen
+@onready var killer_label = $CanvasLayer/DeathScreen/MarginContainer/VBoxContainer/KillerInfoContainer/KillerLabel
+@onready var damage_dealt_label = $CanvasLayer/DeathScreen/MarginContainer/VBoxContainer/DamageInfoContainer/DamageDealtLabel
 
 
 func _unhandled_input(_event):
@@ -51,35 +54,54 @@ func add_player(peer_id):
 	
 	if player.is_multiplayer_authority():
 		# Connect signal for changes in HUD
-		player.health_changed.connect(update_health_bar)
-		player.ammo_changed.connect(update_ammo_bar)
+		player.health_changed.connect(update_health)
+		player.ammo_changed.connect(update_ammo)
+		
+		player.death.connect(die)
+		player.respawned.connect(respawn)
 		
 		player.set_nickname(nickname_input.text)
-		#player.set_color.rpc_id(peer_id, Color(color_picker.color).to_html())
+		player.set_color.rpc_id(peer_id, Color(color_picker.color).to_html())
 
 func remove_player(peer_id):
 	var player = get_node_or_null(str(peer_id))
 	if player:
 		player.queue_free()
 
-func update_health_bar(health):
+func update_health(health):
 	health_bar.value = health
+	if health <= 0:
+		hud.hide()
+		death_screen.show()
 
-func update_ammo_bar(ammo):
+func update_ammo(ammo):
 	if ammo != INF:
 		ammo_label.text = str(ammo)
 	else:
 		ammo_label.text = "∞"
 
+func die(killer, damage_dealt):
+	hud.hide()
+	death_screen.show()
+	killer_label.text = killer
+	damage_dealt_label.text = str(damage_dealt)
+
+func respawn():
+	hud.show()
+	death_screen.hide()
+	health_bar.value = 100
+
 func _on_multiplayer_spawner_spawned(node):
 	if node.is_multiplayer_authority():
 		# Connect signal for changes in HUD
-		node.health_changed.connect(update_health_bar)
-		node.ammo_changed.connect(update_ammo_bar)
+		node.health_changed.connect(update_health)
+		node.ammo_changed.connect(update_ammo)
+		
+		node.death.connect(die)
+		node.respawned.connect(respawn)
 		
 		node.set_nickname(nickname_input.text)
-		#node.set_color.rpc_id(int(str(node.name)), Color(color_picker.color).to_html())
-
+		node.set_color.rpc_id(int(str(node.name)), Color(color_picker.color).to_html())
 
 func _on_help_button_pressed():
 	main_menu.hide()
