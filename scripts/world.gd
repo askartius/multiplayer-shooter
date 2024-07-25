@@ -18,6 +18,7 @@ var player_src = preload("res://scenes/player.tscn")
 @onready var death_screen = $CanvasLayer/DeathScreen
 @onready var killer_label = $CanvasLayer/DeathScreen/MarginContainer/VBoxContainer/KillerInfoContainer/KillerLabel
 @onready var damage_dealt_label = $CanvasLayer/DeathScreen/MarginContainer/VBoxContainer/DamageInfoContainer/DamageDealtLabel
+@onready var animation_player = $CanvasLayer/AnimationPlayer
 
 
 func _unhandled_input(_event):
@@ -69,6 +70,8 @@ func remove_player(peer_id):
 
 func update_health(health):
 	health_bar.value = health
+	animation_player.stop()
+	animation_player.play("hit")
 	if health <= 0:
 		hud.hide()
 		death_screen.show()

@@ -121,7 +121,6 @@ func shoot():
 func take_damage(damage_taken, damage_from):
 	health -= damage_taken
 	if health <= 0:
-		camera.clear_current(false)
 		death.emit(damage_from, damage_dealt)
 		die.rpc()
 	health_changed.emit(health)
@@ -169,7 +168,6 @@ func _on_animation_player_animation_finished(anim_name):
 		ammo_changed.emit(ammos[weapon])
 	if anim_name == "death":
 		if is_multiplayer_authority():
-			camera.make_current()
 			health = 100
 			randomize()
 			position = Vector3(randi_range(-10, 10), 5, randi_range(-10, 10))
