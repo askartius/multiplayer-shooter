@@ -40,8 +40,7 @@ func _ready():
 		set_process_unhandled_input(false)
 		set_physics_process(false)
 	
-	randomize()
-	#set_color(Color(randf_range(0, 1), randf_range(0, 1), randf_range(0, 1)).to_html())
+	mesh_instance.set_surface_override_material(0, mesh_instance.get_surface_override_material(0).duplicate())
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
@@ -131,9 +130,8 @@ func set_nickname(user_nickname):
 	nickname_label.text = user_nickname
 	nickname = user_nickname
 
-@rpc("call_local")
 func set_color(color):
-	mesh_instance.mesh.material.albedo_color = Color(color)
+	mesh_instance.get_surface_override_material(0).albedo_color = Color(color)
 
 @rpc("call_local")
 func switch_weapons():

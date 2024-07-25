@@ -19,17 +19,19 @@ properties/3/path = NodePath("NicknameLabel:text")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 properties/4/path = NodePath("MeshInstance3D:mesh:material:albedo_color")
-properties/4/spawn = true
-properties/4/replication_mode = 2
+properties/4/spawn = false
+properties/4/replication_mode = 0
 properties/5/path = NodePath(".:visible")
 properties/5/spawn = true
 properties/5/replication_mode = 2
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gemd2"]
-metallic_specular = 0.0
+properties/6/path = NodePath("MeshInstance3D:surface_material_override/0:albedo_color")
+properties/6/spawn = true
+properties/6/replication_mode = 2
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ucsyn"]
-material = SubResource("StandardMaterial3D_gemd2")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tjxrs"]
+metallic_specular = 0.0
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4owt7"]
 
@@ -313,6 +315,7 @@ replication_config = SubResource("SceneReplicationConfig_imy1d")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_ucsyn")
+surface_material_override/0 = SubResource("StandardMaterial3D_tjxrs")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
