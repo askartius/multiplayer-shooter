@@ -18,12 +18,18 @@ properties/2/replication_mode = 1
 properties/3/path = NodePath("NicknameLabel:text")
 properties/3/spawn = true
 properties/3/replication_mode = 2
+properties/4/path = NodePath("MeshInstance3D:mesh:material:albedo_color")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath(".:visible")
+properties/5/spawn = true
+properties/5/replication_mode = 2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d1m53"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gemd2"]
 metallic_specular = 0.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ucsyn"]
-material = SubResource("StandardMaterial3D_d1m53")
+material = SubResource("StandardMaterial3D_gemd2")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4owt7"]
 
@@ -257,10 +263,10 @@ tracks/0/path = NodePath(".:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1, 4),
-"transitions": PackedFloat32Array(6, 1, 6),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(6, 1),
 "update": 0,
-"values": [Vector3(0, 0, 0), Vector3(1.5708, 0, 0), Vector3(0, 0, 0)]
+"values": [Vector3(0, 0, 0), Vector3(1.5708, 0, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -269,10 +275,10 @@ tracks/1/path = NodePath(".:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 2, 4),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [true, false, true]
+"values": [true, false]
 }
 tracks/2/type = "value"
 tracks/2/imported = false

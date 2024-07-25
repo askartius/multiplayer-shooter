@@ -41,7 +41,7 @@ func _ready():
 		set_physics_process(false)
 	
 	randomize()
-	set_color(Color(randf_range(0, 1), randf_range(0, 1), randf_range(0, 1)).to_html())
+	#set_color(Color(randf_range(0, 1), randf_range(0, 1), randf_range(0, 1)).to_html())
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
@@ -131,7 +131,7 @@ func set_nickname(user_nickname):
 	nickname_label.text = user_nickname
 	nickname = user_nickname
 
-@rpc("any_peer", "call_local")
+@rpc("call_local")
 func set_color(color):
 	mesh_instance.mesh.material.albedo_color = Color(color)
 
@@ -172,11 +172,12 @@ func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "death":
 		if is_multiplayer_authority():
 			camera.make_current()
-		health = 100
-		randomize()
-		position = Vector3(randi_range(-12, 12), 5, randi_range(-12, 12))
-		rotation = Vector3.ZERO
-		respawned.emit()
+			health = 100
+			randomize()
+			position = Vector3(randi_range(-10, 10), 5, randi_range(-10, 10))
+			rotation = Vector3.ZERO
+			visible = true
+			respawned.emit()
 
 @rpc("call_local")
 func die():

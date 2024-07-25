@@ -49,11 +49,10 @@ func add_player(peer_id):
 	var player = player_src.instantiate()
 	player.name = str(peer_id)
 	randomize()
-	player.position = Vector3(randi_range(-12, 12), 5, randi_range(-12, 12))
+	player.position = Vector3(randi_range(-10, 10), 5, randi_range(-10, 10))
 	add_child(player)
 	
 	if player.is_multiplayer_authority():
-		# Connect signal for changes in HUD
 		player.health_changed.connect(update_health)
 		player.ammo_changed.connect(update_ammo)
 		
@@ -61,7 +60,7 @@ func add_player(peer_id):
 		player.respawned.connect(respawn)
 		
 		player.set_nickname(nickname_input.text)
-		player.set_color.rpc_id(peer_id, Color(color_picker.color).to_html())
+		player.set_color(Color(color_picker.color).to_html())
 
 func remove_player(peer_id):
 	var player = get_node_or_null(str(peer_id))
@@ -93,7 +92,6 @@ func respawn():
 
 func _on_multiplayer_spawner_spawned(node):
 	if node.is_multiplayer_authority():
-		# Connect signal for changes in HUD
 		node.health_changed.connect(update_health)
 		node.ammo_changed.connect(update_ammo)
 		
@@ -101,7 +99,7 @@ func _on_multiplayer_spawner_spawned(node):
 		node.respawned.connect(respawn)
 		
 		node.set_nickname(nickname_input.text)
-		node.set_color.rpc_id(int(str(node.name)), Color(color_picker.color).to_html())
+		node.set_color(Color(color_picker.color).to_html())
 
 func _on_help_button_pressed():
 	main_menu.hide()
