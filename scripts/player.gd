@@ -168,7 +168,9 @@ func _on_animation_player_animation_finished(anim_name):
 		ammo_changed.emit(ammos[weapon])
 	if anim_name == "death":
 		if is_multiplayer_authority():
+			camera.make_current()
 			health = 100
+			damage_dealt = 0
 			randomize()
 			position = Vector3(randi_range(-10, 10), 5, randi_range(-10, 10))
 			rotation = Vector3.ZERO

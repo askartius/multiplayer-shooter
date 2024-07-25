@@ -19,6 +19,7 @@ var player_src = preload("res://scenes/player.tscn")
 @onready var killer_label = $CanvasLayer/DeathScreen/MarginContainer/VBoxContainer/KillerInfoContainer/KillerLabel
 @onready var damage_dealt_label = $CanvasLayer/DeathScreen/MarginContainer/VBoxContainer/DamageInfoContainer/DamageDealtLabel
 @onready var animation_player = $CanvasLayer/AnimationPlayer
+@onready var overview_camera = $OverviewCameraPivotPoint/OverviewCamera
 
 
 func _unhandled_input(_event):
@@ -75,6 +76,7 @@ func update_health(health):
 	if health <= 0:
 		hud.hide()
 		death_screen.show()
+		
 
 func update_ammo(ammo):
 	if ammo != INF:
@@ -85,6 +87,7 @@ func update_ammo(ammo):
 func die(killer, damage_dealt):
 	hud.hide()
 	death_screen.show()
+	overview_camera.make_current()
 	killer_label.text = killer
 	damage_dealt_label.text = str(damage_dealt)
 
