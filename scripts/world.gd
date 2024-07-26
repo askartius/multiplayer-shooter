@@ -52,25 +52,27 @@ func _on_join_button_pressed():
 	multiplayer.server_disconnected.connect(get_tree().quit)
 
 func add_player(peer_id): # Runs on the server
-	var player = player_src.instantiate()
-	player.name = str(peer_id)
-	randomize()
-	player.position = Vector3(randi_range(-10, 10), 5, randi_range(-10, 10))
-	add_child(player)
-	
 	# Add player to the kill count
 	kill_count[str(peer_id)] = 0
 	var player_stats_container = player_stats_container_src.instantiate()
 	player_stats_container.name = str(peer_id)
+	kill_count_container.add_child(player_stats_container)
 	
+	# Add player character
+	var player = player_src.instantiate()
+	player.name = str(peer_id)
+	randomize()
+	player.position = Vector3(randi_range(-10, 10), 10, randi_range(-10, 10))
+	add_child(player)
+	
+	# Connect HUD and transfer data to the character if it's the local player
 	if player.is_multiplayer_authority():
 		player.health_changed.connect(update_health)
 		player.ammo_changed.connect(update_ammo)
-		
 		player.death.connect(die)
 		player.respawned.connect(respawn)
 		
-		var nickname
+		var nickname = ""
 		if nickname_input.text == "":
 			randomize()
 			nickname = "Unknown" + str(randi_range(0, 1000)) # Set the nickname to Unknown% if empty
@@ -80,9 +82,7 @@ func add_player(peer_id): # Runs on the server
 		player.set_nickname(nickname)
 		player.set_color(Color(color_picker.color).to_html())
 		
-		player_stats_container.get_node("NicknameLabel").text = nickname # Show nickname in kill count
-	
-	kill_count_container.add_child(player_stats_container)
+		update_player_nickname.rpc(str(peer_id), nickname) # Show nickname in the kill count
 
 func remove_player(peer_id):
 	var player = get_node_or_null(str(peer_id))
@@ -120,20 +120,15 @@ func respawn():
 	
 	health_bar.value = 100
 
-func _on_multiplayer_spawner_spawned(node): # Runs on the clients
-	# Add player to the kill count
-	kill_count[str(node.name)] = 0
-	var player_stats_container = player_stats_container_src.instantiate()
-	player_stats_container.name = str(node.name)
-	
+func _on_multiplayer_spawner_spawned(node): # Runs on clients
+	# Connect HUD and transfer data to the character if it's the local player
 	if node.is_multiplayer_authority():
 		node.health_changed.connect(update_health)
 		node.ammo_changed.connect(update_ammo)
-		
 		node.death.connect(die)
 		node.respawned.connect(respawn)
 		
-		var nickname
+		var nickname = ""
 		if nickname_input.text == "":
 			randomize()
 			nickname = "Unknown" + str(randi_range(0, 1000)) # Set the nickname to Unknown% if empty
@@ -143,9 +138,7 @@ func _on_multiplayer_spawner_spawned(node): # Runs on the clients
 		node.set_nickname(nickname)
 		node.set_color(Color(color_picker.color).to_html())
 		
-		player_stats_container.get_node("NicknameLabel").text = nickname # Show nickname in kill count
-	
-	kill_count_container.add_child(player_stats_container)
+		update_player_nickname.rpc(str(node.name), nickname)
 
 func _on_help_button_pressed():
 	main_menu.hide()
@@ -167,3 +160,7 @@ func update_kill_count(player_id):
 	kill_count[player_id] += 1
 	for player in kill_count:
 		kill_count_container.get_node(player).get_node("KillCountLabel").text = str(kill_count[player])
+
+@rpc("call_local", "any_peer")
+func update_player_nickname(player_id, nickname):
+	kill_count_container.get_node(player_id).get_node("NicknameLabel").text = nickname
