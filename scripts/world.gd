@@ -61,8 +61,8 @@ func add_player(peer_id): # Runs on the server
 	# Add player character
 	var player = player_src.instantiate()
 	player.name = str(peer_id)
-	randomize()
-	player.position = Vector3(randi_range(-10, 10), 10, randi_range(-10, 10))
+	player.position = Vector3(randi_range(-15, 15), 8, randi_range(-15, 15))
+	print(player.position)
 	add_child(player)
 	
 	# Connect HUD and transfer data to the character if it's the local player
@@ -82,12 +82,16 @@ func add_player(peer_id): # Runs on the server
 		player.set_nickname(nickname)
 		player.set_color(Color(color_picker.color).to_html())
 		
-		update_player_nickname.rpc(str(peer_id), nickname) # Show nickname in the kill count
+		# Show nickname in the kill count
+		update_player_nickname.rpc(str(peer_id), nickname)
 
 func remove_player(peer_id):
 	var player = get_node_or_null(str(peer_id))
 	if player:
-		kill_count.erase(player.nickname)
+		# Remove player from the kill count
+		kill_count.erase(str(peer_id))
+		kill_count_container.get_node(str(peer_id)).queue_free()
+		# Remove player's character
 		player.queue_free()
 
 func update_health(health):
@@ -138,6 +142,7 @@ func _on_multiplayer_spawner_spawned(node): # Runs on clients
 		node.set_nickname(nickname)
 		node.set_color(Color(color_picker.color).to_html())
 		
+		# Show nickname in the kill count
 		update_player_nickname.rpc(str(node.name), nickname)
 
 func _on_help_button_pressed():

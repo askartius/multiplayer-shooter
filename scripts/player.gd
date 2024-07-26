@@ -44,7 +44,7 @@ func _ready():
 	mesh_instance.set_surface_override_material(0, mesh_instance.get_surface_override_material(0).duplicate())
 
 func _unhandled_input(event):
-	if event is InputEventMouseMotion:
+	if event is InputEventMouseMotion and health > 0: # Only take input if the player is alive
 		rotate_y(-event.relative.x * 0.005)
 		camera.rotate_x(-event.relative.y * 0.005)
 		camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
@@ -53,7 +53,12 @@ func _physics_process(delta):
 	# Add the gravity
 	if not is_on_floor():
 		velocity.y -= GRAVITY * delta
-
+	
+	# If player is dead, do not take input
+	if health <= 0:
+		move_and_slide()
+		return
+	
 	# Handle jump
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
@@ -169,13 +174,13 @@ func _on_animation_player_animation_finished(anim_name):
 		ammo_changed.emit(ammos[weapon])
 	if anim_name == "death":
 		if is_multiplayer_authority():
+			#animation_player.play("RESET")
 			camera.make_current()
 			health = 100
 			damage_dealt = 0
 			randomize()
-			position = Vector3(randi_range(-10, 10), 5, randi_range(-10, 10))
-			rotation = Vector3.ZERO
-			visible = true
+			position = Vector3(randi_range(-15, 15), 8, randi_range(-15, 15))
+			rotation = Vector3(0, randi_range(0, 360), 0)
 			respawned.emit()
 
 @rpc("call_local")
