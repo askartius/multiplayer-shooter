@@ -12,8 +12,8 @@ properties/1/path = NodePath("Sun:visible")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 properties/2/path = NodePath(".:kill_count")
-properties/2/spawn = true
-properties/2/replication_mode = 2
+properties/2/spawn = false
+properties/2/replication_mode = 0
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cdqty"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -66,10 +66,10 @@ _data = {
 }
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hy3xf"]
-bg_color = Color(0.188235, 0.313726, 0.0627451, 1)
+bg_color = Color(0.25098, 0.501961, 0.0627451, 0.752941)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_03a44"]
-bg_color = Color(0.376471, 0.815686, 0.188235, 1)
+bg_color = Color(0.501961, 1, 0.12549, 0.752941)
 
 [sub_resource type="Animation" id="Animation_u1uxx"]
 resource_name = "hit"
@@ -309,22 +309,6 @@ pivot_offset = Vector2(32, 32)
 texture = ExtResource("3_2m8jt")
 stretch_mode = 5
 
-[node name="HealthBar" type="ProgressBar" parent="CanvasLayer/HUD"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 384.0
-offset_top = 64.0
-offset_right = -384.0
-offset_bottom = -560.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_hy3xf")
-theme_override_styles/fill = SubResource("StyleBoxFlat_03a44")
-value = 100.0
-show_percentage = false
-
 [node name="AmmoLabel" type="Label" parent="CanvasLayer/HUD"]
 layout_mode = 0
 offset_left = 584.0
@@ -333,29 +317,34 @@ offset_right = 608.0
 offset_bottom = 335.0
 text = "∞"
 
-[node name="KillCountContainerColor" type="ColorRect" parent="CanvasLayer/HUD"]
+[node name="TopContainer" type="PanelContainer" parent="CanvasLayer/HUD"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 384.0
-offset_right = -384.0
-offset_bottom = -584.0
+offset_left = 256.0
+offset_right = -256.0
+offset_bottom = -560.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.25098, 0.25098, 0.25098, 0.501961)
 
-[node name="KillCountContainer" type="HBoxContainer" parent="CanvasLayer/HUD"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 384.0
-offset_right = -384.0
-offset_bottom = -584.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HUD/TopContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="KillCountContainer" type="HBoxContainer" parent="CanvasLayer/HUD/TopContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
 alignment = 1
+
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer/HUD/TopContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/background = SubResource("StyleBoxFlat_hy3xf")
+theme_override_styles/fill = SubResource("StyleBoxFlat_03a44")
+value = 100.0
+show_percentage = false
 
 [node name="DeathScreen" type="PanelContainer" parent="CanvasLayer"]
 visible = false

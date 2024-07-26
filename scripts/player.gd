@@ -10,12 +10,13 @@ const SPEED = 10.0
 const JUMP_VELOCITY = 10.0
 const GRAVITY = 20.0
 
+@export var nickname = ""
+
 var health = 100
 var weapon = 0
 var damage = 50
 var ammos = [INF, 10, 50]
 var ammo_sizes = [INF, 10, 50]
-var nickname = ""
 var damage_dealt = 0
 
 @onready var camera = $Camera3D
@@ -65,7 +66,7 @@ func _physics_process(delta):
 			shoot.rpc()
 			if ray_cast.is_colliding():
 				var hit_player = ray_cast.get_collider()
-				hit_player.take_damage.rpc_id(hit_player.get_multiplayer_authority(), damage, nickname)
+				hit_player.take_damage.rpc_id(hit_player.get_multiplayer_authority(), damage, str(name))
 				damage_dealt += damage
 	elif Input.is_action_just_pressed("shoot") and \
 		not animation_player.current_animation == "shoot" and \
@@ -74,7 +75,7 @@ func _physics_process(delta):
 			shoot.rpc()
 			if ray_cast.is_colliding():
 				var hit_player = ray_cast.get_collider()
-				hit_player.take_damage.rpc_id(hit_player.get_multiplayer_authority(), damage, nickname)
+				hit_player.take_damage.rpc_id(hit_player.get_multiplayer_authority(), damage, str(name))
 				damage_dealt += damage
 	
 	# Handle reload
@@ -108,9 +109,9 @@ func shoot():
 	if weapon > 0:
 		var muzzle_flash
 		if weapon == 1:
-			muzzle_flash = pistol.find_child("MuzzleFlash")
+			muzzle_flash = pistol.get_node("MuzzleFlash")
 		elif weapon == 2:
-			muzzle_flash = uzi.find_child("MuzzleFlash")
+			muzzle_flash = uzi.get_node("MuzzleFlash")
 		muzzle_flash.restart()
 		muzzle_flash.emitting = true
 	
