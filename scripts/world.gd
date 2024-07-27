@@ -95,9 +95,12 @@ func remove_player(peer_id):
 		player.queue_free()
 
 func update_health(health):
+	# Make screen reddish
+	if health_bar.value > health:
+		animation_player.stop()
+		animation_player.play("hit")
+	
 	health_bar.value = health
-	animation_player.stop()
-	animation_player.play("hit")
 	if health <= 0:
 		hud.hide()
 		death_screen.show()
@@ -121,8 +124,6 @@ func die(killer_id, damage_dealt):
 func respawn():
 	hud.show()
 	death_screen.hide()
-	
-	health_bar.value = 100
 
 func _on_multiplayer_spawner_spawned(node): # Runs on clients
 	# Connect HUD and transfer data to the character if it's the local player

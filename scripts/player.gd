@@ -173,17 +173,23 @@ func _on_animation_player_animation_finished(anim_name):
 		ammos[weapon] = ammo_sizes[weapon]
 		ammo_changed.emit(ammos[weapon])
 	if anim_name == "death":
+		respawn.rpc()
 		if is_multiplayer_authority():
-			animation_player.stop()
 			camera.make_current()
-			health = 100
-			damage_dealt = 0
-			randomize()
-			position = Vector3(randi_range(-15, 15), 8, randi_range(-15, 15))
-			rotation = Vector3(0, randi_range(0, 360), 0)
-			respawned.emit()
 
 @rpc("call_local")
 func die():
 	animation_player.stop()
 	animation_player.play("death")
+
+@rpc("call_local")
+func respawn():
+	animation_player.play("RESET")
+	health = 100
+	damage_dealt = 0
+	ammos = [INF, 10, 50]
+	randomize()
+	position = Vector3(randi_range(-15, 15), 8, randi_range(-15, 15))
+	respawned.emit()
+	health_changed.emit()
+	ammo_changed.emit()
