@@ -11,9 +11,9 @@ const JUMP_VELOCITY = 10.0
 const GRAVITY = 20.0
 
 @export var nickname = ""
+@export var weapon = 0
 
 var health = 100
-var weapon = 0
 var damage = 50
 var ammos = [INF, 10, 50]
 var ammo_sizes = [INF, 10, 50]
@@ -179,17 +179,26 @@ func _on_animation_player_animation_finished(anim_name):
 
 @rpc("call_local")
 func die():
+	camera.hide()
+	nickname_label.hide()
+	
 	animation_player.stop()
 	animation_player.play("death")
 
 @rpc("call_local")
 func respawn():
 	animation_player.play("RESET")
+	
 	health = 100
 	damage_dealt = 0
 	ammos = [INF, 10, 50]
+	
 	randomize()
 	position = Vector3(randi_range(-15, 15), 8, randi_range(-15, 15))
+	
 	respawned.emit()
 	health_changed.emit()
 	ammo_changed.emit()
+	
+	camera.show()
+	nickname_label.show()
