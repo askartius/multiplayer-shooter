@@ -61,7 +61,7 @@ func add_player(peer_id): # Runs on the server
 	# Add player character
 	var player = player_src.instantiate()
 	player.name = str(peer_id)
-	player.position = Vector3(randi_range(-15, 15), 8, randi_range(-15, 15))
+	player.position = Vector3(0, 5, 0)
 	print(player.position)
 	add_child(player)
 	

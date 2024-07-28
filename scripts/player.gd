@@ -121,7 +121,8 @@ func shoot():
 		muzzle_flash.emitting = true
 	
 	ammos[weapon] -= 1
-	ammo_changed.emit(ammos[weapon])
+	if is_multiplayer_authority():
+		ammo_changed.emit(ammos[weapon])
 
 @rpc("any_peer")
 func take_damage(damage_taken, damage_from):
@@ -174,8 +175,6 @@ func _on_animation_player_animation_finished(anim_name):
 		ammo_changed.emit(ammos[weapon])
 	if anim_name == "death":
 		respawn.rpc()
-		if is_multiplayer_authority():
-			camera.make_current()
 
 @rpc("call_local")
 func die():
@@ -187,6 +186,7 @@ func die():
 
 @rpc("call_local")
 func respawn():
+	animation_player.stop()
 	animation_player.play("RESET")
 	
 	health = 100
@@ -194,11 +194,16 @@ func respawn():
 	ammos = [INF, 10, 50]
 	
 	randomize()
-	position = Vector3(randi_range(-15, 15), 8, randi_range(-15, 15))
-	
-	respawned.emit()
-	health_changed.emit()
-	ammo_changed.emit()
+	position = Vector3(randi_range(-15, 15), 5, randi_range(-15, 15))
 	
 	camera.show()
 	nickname_label.show()
+	
+	print("1")
+	
+	if is_multiplayer_authority():
+		camera.make_current()
+		respawned.emit()
+		health_changed.emit(health)
+		ammo_changed.emit(ammos[weapon])
+		print("2")
